@@ -1,0 +1,87 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block title %}
+  Менеджеры
+{% endblock%}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/sample/sample.css' %}">
+<link rel="stylesheet" href="{% static 'css/managers/paginate.css' %}">
+<link rel="stylesheet" href="{% static 'css/managers/table.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<div class="container">
+  <div>
+    <h4 class="title-head">Менеджер:</h4>
+        <a class="btn btn-outline-success btn-click" 
+        {% if 'sending' in request.path %}
+          href="{% url 'activity:sending_manager_edit' active.id %}" 
+        {% else %}
+          href="{% url 'activity:manager_edit' active.id %}"
+        {% endif %}
+          role="button">
+        {{ active.service_manager }}
+        </a>
+      <a class="btn btn-outline-success btn-click" style="float: right;"
+        {% if 'sending' in request.path %}
+          href="{% url 'activity:sending_activity' %}" 
+        {% else %}
+          href="{% url 'activity:index' %}"
+        {% endif %}
+          role="button">
+        К проектам
+      </a>
+  </div>
+  <hr>
+  <h4 class="title-head">Заявки по проекту {{ active }}:
+    <a class="btn btn-outline-success btn-click" 
+      href="{% url 'activity:dowload_file_project' active.id %}" 
+      role="button">
+      Скачать
+    </a>
+  </h4>
+  <div class="overflow-auto" style="margin-top: -5px; background-color: ;">
+    <table class="table table-bordered table-hover"> 
+      <thead> 
+        <tr style="font-size:12px;
+        text-align: left;">
+          <th style="padding: 12px 15px;">Код</th> 
+          <th style="padding: 12px 15px;">Создано</th> 
+          <th style="padding: 12px 15px;">Приоритет</th> 
+          <th style="padding: 12px 15px;">Статус</th>
+          <th style="padding: 12px 15px;">Тема</th>
+          <th style="padding: 12px 15px;">Описание</th>
+          <th style="padding: 12px 15px;">Автор</th>
+          <th style="padding: 12px 15px;">Описание</th>
+          <th style="padding: 12px 15px;">Решение</th>
+        </tr> 
+      </thead> 
+      <tbody> 
+      {% if page_obj %}   
+        {% for case in page_obj %} 
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <td>{{ case.code }}</td>
+            <td>{{ case.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ case.priority }}</td>
+            <td>{{ case.status }}</td>
+            <td>{{ case.theme }}</td>
+            <td>{{ case.description }}</td>
+            <td>{{ case.author }}</td>
+            <td>{{ case.executor }}</td>
+            <td>{{ case.resolution_description }}</td>
+          </tr> 
+        {% endfor %} 
+      {% endif %} 
+      </tbody> 
+    </table>
+  </div>
+  <hr>
+{% include 'includes/paginator.html' %}
+</div>
+<script>
+  function showForm(){
+    document.getElementById('SampleInfoMessage').style.display = "block";
+  }
+  function hideForm(){
+    document.getElementById('SampleInfoMessage').style.display = "none";
+  }
+</script>
+{% endblock %}

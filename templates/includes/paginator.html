@@ -1,0 +1,19 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/managers_project/paginate.css' %}">
+{% if page_obj.has_other_pages %}
+<nav aria-label="Page navigation">
+  <div class="pagination">
+    {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li>
+            <span>{{ i }}</span>
+          </li>
+        {% else %}
+          <li>
+            <a href="?page={{ i }}">{{ i }}</a>
+          </li>
+        {% endif %}
+    {% endfor %}  
+  </div>
+</nav>
+{% endif %}

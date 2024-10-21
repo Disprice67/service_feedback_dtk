@@ -1,0 +1,99 @@
+{% load static %}
+<dialog id="feedback-form">
+<link rel="stylesheet" href="{% static 'css/feedback/feedback.css' %}">
+        <div class="card">
+          <div class="card-body">      
+            <form method="post"
+              {% if 'sending' in request.path %}
+                action=
+                {% if manager %}
+                  "{% url 'activity:sending_manager_edit' active.pk manager.pk%}"
+                {% else %}
+                  "{% url 'activity:sending_activity' %}"
+                {% endif %}
+              {% else %}
+                action=
+                {% if manager %}
+                  "{% url 'activity:manager_edit' active.pk manager.pk%}"
+                {% else %}
+                  "{% url 'activity:index' %}"
+                {% endif %}
+              {% endif %}>
+              {% csrf_token %}
+              <ul class="list-group">
+                <label for="" style="margin-bottom: 5px;">
+                    Оцени наш опросник!
+                    <span class="required text-danger">*</span>
+                </label>
+                <li class="list-group-item list-group-item-action">
+                    <div class="rating" style="display: inline-block;margin-left: 5px; margin: -5px;">
+                        <input type="radio" id="star5" name="rating" value="5" required/>
+                        <label for="star5"></label>
+                        <input type="radio" id="star4" name="rating" value="4" required/>
+                        <label for="star4"></label>
+                        <input type="radio" id="star3" name="rating" value="3" required/>
+                        <label for="star3"></label>
+                        <input type="radio" id="star2" name="rating" value="2" required/>
+                        <label for="star2"></label>
+                        <input type="radio" id="star1" name="rating" value="1" required/>
+                        <label for="star1"></label>
+                      </div>
+                </li>
+              </ul>
+              {% for field in form %}
+              {% if field.name != "rating" %}
+                <div {% if field.field. %}
+                    aria-="True"
+                  {% else %}
+                    aria-="False"
+                  {% endif %} style="margin-left: -10px; margin-top: 20px;">
+                  <ul class="list-group list-group-flush" style="margin-top: 10px; margin-left: 10px;">
+                    <li class="list-group-item" style="padding: 0 0;">
+                    <label for="{{ field.id_for_label }}" style="margin-bottom: 5px;">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                      {% if field.help_text %}
+                        <small id="{{ field.id_for_label }}-help" class="form-text text-muted">
+                          {{ field.help_text|linebreaks }}
+                        </small>
+                      {% endif %}
+                    </li>
+                </ul>
+                {% if field.errors %}
+                  <div class="alert alert-danger">
+                    {{ field.errors }}
+                  </div>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+                <button type="submit" class="btn btn-outline-success" 
+                style="margin-left: 160px;
+                border-radius: 20px;
+                margin-bottom: -5px; 
+                margin-top: 5px;">
+                    Отправить
+                </button>
+            </form>
+          </div>  
+        </div> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                function FeedbackActive(form) {
+                    const dialog = document.querySelector("#feedback-form")
+                    dialog.showModal()
+                    function onClick(event) {
+                        if (event.target === dialog) {
+                            dialog.close();
+                        }
+                    }                       
+                    dialog.addEventListener("click", onClick);
+                    dialog.showModal(); 
+                };
+                $("#target").click(function() {
+                FeedbackActive(document);
+                });
+            });
+        </script>
+</dialog>

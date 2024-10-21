@@ -1,0 +1,39 @@
+.logo {
+    appearance: none;
+    backface-visibility: hidden;
+    background-image: linear-gradient(60deg, #64b3f4 0%, #c2e59c 100%);
+    border-radius: 15px;
+    border-style: none;
+    box-shadow: rgba(39, 174, 96, .15) 0 4px 9px;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 380;
+    letter-spacing: normal;
+    line-height: 1.5;
+    outline: none;
+    overflow: hidden;
+    padding: 13px 10px;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transform: translate3d(0, 0, 0);
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: top;
+    white-space: nowrap;
+    width: 400px;
+    height: 50px;
+    margin-bottom: 2px;
+    margin-left: 30px;
+}
+.logo-foto {
+    height: 50px; 
+    width: 50px; 
+    border-radius: 5px; 
+    margin-left: -10px;
+}

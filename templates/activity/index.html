@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+  Проекты
+{% endblock%}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/sample/sample.css' %}">
+<link rel="stylesheet" href="{% static 'css/managers/paginate.css' %}">
+<link rel="stylesheet" href="{% static 'css/feedback/tooltip.css' %}">
+<div class="container">
+    {% if page_obj %}
+        {% if 'sending' in request.path %}
+        <p style="margin-bottom: -2px;
+            line-height: 2em;
+            font-weight: 300;
+            opacity: 0.7;">*Отправленные отзывы
+        </p>
+        {% else %}
+        <p style="margin-bottom: -2px;
+            line-height: 2em;
+            font-weight: 300;
+            opacity: 0.7;">*Чтобы отправить стандартный отзыв нужно перейти в форму опроса
+        </p>
+        {% endif %}
+    <h4 class="title-head">Список проектов:</h4>
+    <ul>
+        {% for active in page_obj %}
+        <li class="list-group-item">
+            <a class="btn btn-outline-success btn-click"
+            {% if 'sending' in request.path %}
+                href="{% url 'activity:sending_managers' active.id %}" 
+            {% else %}
+                href="{% url 'activity:managers' active.id %}"
+            {% endif %}>
+            {{ active }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <span>
+        {% include 'includes/paginator.html' %}
+    </span>
+    {% else %}
+        {% if 'sending' in request.path %}
+            <h5 class="title-head">У вас нет отправленных отзывов.</h5>
+        {% else %}
+            <h5 class="title-head">Проекты закончились! Ooops</h5>
+        {% endif %}
+    {% endif %}
+    {% if not user_feedback.rating %}
+        {% include '../feedback/feedback.html' %}
+        <div class="tooltip-mario-container">
+            <div class="box" id="target"></div>
+            <div class="mush"></div>
+        </div>
+        {% endif%}
+</div>
+{% endblock %}
+

@@ -1,0 +1,37 @@
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/headers/head.css' %}">
+<header>
+  <nav class="navbar bg-white border-bottom border-body" data-bs-theme="#e3f2fd">
+    <div class="container">
+      <a class="logo" href="{% url 'activity:index' %}">
+      <span style="margin-left: 10px;">Feedback</span>
+        <img class="logo-foto" src="{% static 'img/index/crocodile.png' %}">
+        <span style="font-weight: 300; font-size: 24px;">DTK</span>
+      </a>
+      {% with request.resolver_match.view_name as view_name %}
+      <ul class="nav nav-underline">
+        {% if user.is_authenticated %}
+        <li class="nav-link" style="color:#3d8b3d;">
+          {{ user.first_name|replace_underscore|title }}
+        </li>
+        <li class="nav-item">
+          <a class="nav-link aria-disabled="true {% if view_name  == 'activity:sending' %}active{% endif %}" 
+          href="{% url 'activity:sending_activity' %}" role="button" style="color:#3d8b3d">
+            Отправленные
+          </a>
+        {% comment %} </li>
+        <li class="nav-item"> 
+          <a class="nav-link aria-disabled="true {% if view_name  == 'users:logout' %}active{% endif %}" 
+          href="/sso/logout/" role="button" style="color:#3d8b3d">
+            Выйти
+          </a>
+        </li> {% endcomment %}
+        {% else %}
+        {% endif %}
+      </ul>
+      {% endwith %}
+    </div>
+  </nav>      
+</header>
+      

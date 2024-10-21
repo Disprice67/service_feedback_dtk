@@ -1,0 +1,40 @@
+::backdrop {
+    background: linear-gradient(rgba(0,0,0,0,4),rgba(0,0,0,0.5));
+}
+dialog {
+    box-sizing: border-box;
+    width: calc(100% - 1em);
+    max-width: 200px;
+    border: 1px solid white;
+    border-radius: 0.5em;
+    text-align: center;
+    padding: 0.8em 1.5em 1em;
+}
+dialog h6 {
+    margin-bottom: 0.5em;
+    color: #111;
+}
+dialog p {
+    margin-bottom: 0.5em;
+    color: #111;
+    padding: 0 0.5em;
+    font-size: 15px;
+}
+dialog .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    margin-bottom: 0.5em;
+}
+dialog .controls button {
+    padding: 0.55em;
+    cursor: pointer;
+    background: white;
+    outline: none;
+    border: 1px solid #4CAF50;
+    border-radius: 5px;
+    color: #4CAF50;
+    font-size: 0.9em;
+    width: 60px;
+    height: 40px;
+}

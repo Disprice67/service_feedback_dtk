@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{ manager.manager_name|truncatechars:150 }} {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/sample/sample.css' %}">
+<link rel="stylesheet" href="{% static 'css/managers_detail/managers_detail.css' %}">
+<div class="row justify-content-center">
+    <div class="accordion" style="margin-top: 50px;">
+        <h2>{{ active.name }}</h2>
+        <div class="item">
+          <div class="question">
+            Требовалась ли тебе помощь менеджера при решении кейсов?
+          </div>
+          <div class="answer">
+            <p>{{ active.get_first_question_display }}</p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="question">
+            Участвовал ли менеджер в решении кейсов?
+          </div>
+          <div class="answer">
+            <p>{{ active.get_second_question_display }}</p>
+          </div>
+        </div>
+        {% if active.third_question %}
+        <div class="item">
+          <div class="question">
+            Было ли это участие полезным?
+          </div>
+          <div class="answer">
+            <p>{{ active.get_third_question_display }}</p>
+          </div>
+        </div>
+        {% endif %}
+        <div class="item">
+          <div class="question">
+            Есть ли у тебя вопросы, которые нужно обсудить с менеджером?
+          </div>
+          <div class="answer">
+            <p>{{ active.get_fourth_question_display }}</p>
+          </div>
+        </div>
+        {% if active.fourth_comment_question %}
+        <div class="item">
+          <div class="question">
+            Вопросы по проекту:
+          </div>
+          <div class="answer">
+            <p>{{ active.fourth_comment_question }}</p>
+          </div>
+        </div>
+        {% endif %}
+        <div class="item">
+          <div class="question">
+            Оценка менеджера:
+          </div>
+          <div class="answer">
+            <p>{{ active.rating }}</p>
+          </div>
+        </div>
+        {% if active.comment %}
+        <div class="item">
+          <div class="question">
+            Комментарий по работе менеджера:
+          </div>
+          <div class="answer">
+            <p>{{ active.comment }}</p>
+          </div>
+        </div>
+        {% endif %}
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+              <a class="btn btn-outline-success btn-click" 
+              href="{% url 'activity:sending_managers' active.id %}" 
+              role="button">К списку менеджеров</a>
+          </li>
+        </ul>
+    <script>
+      let accordion = document.querySelector(".accordion");
+      let accordionItems = accordion.querySelectorAll(".item");
+      for(let i=0;i<accordionItems.length;i++){
+        let questionItem = accordionItems[i].querySelector(".question");
+        questionItem.addEventListener("click",function(){
+          if(accordionItems[i].classList.contains("active")){
+            accordionItems[i].classList.remove("active");
+          } else {
+            try {
+              accordion.querySelector(".active").classList.remove("active");
+            } catch(msg){}
+            accordionItems[i].classList.add("active");
+          }
+        });
+      }   
+    </script>
+    </div>
+</div>
+
+{% endblock %}

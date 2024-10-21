@@ -1,0 +1,29 @@
+.notification {
+    display: flexbox;
+    position: absolute;
+    display: none;
+    top: 68%; /* Позиционируем под кнопкой */
+    left: 25%; /* Центрируем по горизонтали */
+    width: 27rem;
+    height: 10rem;
+    border-radius: 1rem;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background: #9dcbf2;
+    z-index: 1000;
+  }
+  
+  .notititle {
+    color: var(--color);
+    padding: 0.65rem 0.25rem 0.4rem 1.25rem;
+    font-weight: 500;
+    font-size: 1.1rem;
+
+  }
+  
+  
+  .notibody {
+    color: #fff;
+    padding: 0 1.25rem;
+  }

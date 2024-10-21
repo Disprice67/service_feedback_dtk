@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Обратная связь {% endblock %}
+{% block content %}
+{% load user_filters %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/sample/inform_message.css' %}">
+<link rel="stylesheet" href="{% static 'css/managers_form/window.css' %}">
+<link rel="stylesheet" href="{% static 'css/sample/sample.css' %}">
+<div class="container" style="padding: 0 0 ;">
+  <div class="row justify-content-center">
+    <div class="col-md-7 p-9" style="margin-top: 20px;">
+          <li class="list-group-item" style="text-align: right;">
+            <a class="btn btn-outline-success btn-click"
+              {% if 'sending' in request.path %}
+                href="{% url 'activity:sending_managers' active.id %}" 
+              {% else %}
+                href="{% url 'activity:managers' active.id %}"
+              {% endif %}
+                role="button" id="backButton"
+                style="margin: 10px;">К заявкам</a>
+          </li>
+        <div class="card">
+          {% include '../activity/window.html' %}
+          <div class="card-header">
+              Оставить отзыв: {{ active.name }}  
+          </div>
+          <div class="card-body">      
+            <form method="post" action="{% url 'activity:manager_edit' active.id %}">
+              {% csrf_token %} 
+              {% for field in form %}
+                <div
+                  {% if field.field.required %}
+                    aria-required="True"
+                  {% else %}
+                    aria-required="False"
+                  {% endif %}>
+                  {% if field.field.widget.input_type == 'radio' or field.name == 'fourth_comment_question' %}
+                    <ul class="list-group" style="margin-right: 15px;"
+                    {% if field.name == 'third_question' %} 
+                      id="ul_third_question"
+                    {% elif field.name == 'fourth_comment_question' %}
+                      id="ul_fourth_comment_question"
+                    {% endif %}>
+                      <li class="list-group-item list-group-item-action" 
+                      style="margin-top: 15px;
+                      border-radius: 20px; 
+                      padding: 5px 18px;">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                          {% if field.field.required %}
+                            <span class="required text-danger">*</span>
+                          {% endif %}
+                        </label>
+                          {{ field }}
+                        {% if field.help_text %}
+                          <small id="{{ field.id_for_label }}-help" class="form-text text-muted">
+                            {{ field.help_text|linebreaks }}
+                          </small>
+                        {% endif %}
+                      </li>
+                    </ul>
+                  {% else %}
+                  <ul class="list-group list-group-flush" style="margin-top: 5px;">
+                    <li class="list-group-item">
+                    <label for="{{ field.id_for_label }}" style="margin-bottom: 5px;">
+                        {{ field.label }}
+                      {% if field.field.required %}
+                        <span class="required text-danger">*</span>
+                      {% endif %}
+                    </label>
+                    {{ field }}
+                      {% if field.help_text %}
+                        <small id="{{ field.id_for_label }}-help" 
+                        class="form-text text-muted">
+                          {{ field.help_text|linebreaks }}
+                        </small>
+                      {% endif %}
+                    </li>
+                  {% endif %}
+                </ul>
+                {% if field.errors %}
+                  <div class="alert alert-danger">
+                    {{ field.errors }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+              <div style="display: grid;">
+                <button type="submit" class="btn btn-outline-success btn-click">
+                  {% if 'sending' in request.path %}
+                    К списку менеджеров
+                  {% else %}
+                    Отправить
+                  {% endif %}
+                </button>
+              </div>
+            </form>
+              <form method="post" action="{% url 'activity:standard_feedback' active.id %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-secondary btn-click d-grid gap-2 col-12 mx-auto"
+                  style="padding: 5px 5px;"
+                  type="submit"
+                  onmouseover="showForm();" onmouseout="hideForm();">
+                  Отправить стандартный отзыв
+                </button>
+              </form>
+              <div class="notification" id="SampleInfoMessage">
+                  <div class="notititle">Отзыв</div>
+                  <div class="notibody">Требовалась ли тебе помощь при решение кейсов? Нет</div>
+                  <div class="notibody">Участвовал ли менеджер в решении кейсов? Нет</div>
+                  <div class="notibody">Было ли это участие полезным? Нет</div>
+                  <div class="notibody">Оценка менеджера: 0</div>
+              </div>
+          </div>  
+        </div> 
+        <script>
+          function showForm(){
+            document.getElementById('SampleInfoMessage').style.display = "block";
+          }
+          function hideForm(){
+            document.getElementById('SampleInfoMessage').style.display = "none";
+          }
+          $(document).ready(function() {
+            let hrefLink = $("#backButton").attr('href');
+            $("#backButton").removeAttr('href');
+            $("#second_question").change(function() {
+              if ($("input:radio[name='second_question']:checked").val() === '1') {
+                $('#ul_third_question').show();
+                $("input:radio[name='third_question']").prop('required', true)
+              } else {
+                $('#ul_third_question').hide();
+                $("input:radio[name='third_question']").prop('required', false)
+                $("input:radio[name='third_question']").prop('checked', false)
+              }
+            });
+            $("#second_question").trigger("change")
+            $("#fourth_question").change(function() {
+              const fourComment = document.getElementById("fourth_comment_question")
+              const ulFourComment = document.getElementById('ul_fourth_comment_question')
+              if ($("input:radio[name='fourth_question']:checked").val() === '1') {
+                ulFourComment.style.display = 'block'
+                fourComment.required = true
+              } else {
+                if ($('#fourth_comment_question').val()) {
+                  document.getElementById("fourth_question_0").click()
+                  const dialogComment = document.querySelector("dialog")
+                  $(".ok_btn").html("Да");
+                  $(".close-btn").html("Нет");
+                  $("#title").html("Удалить вопросы?")
+                  dialogComment.showModal()
+                  dialogComment.querySelector(".close-btn").addEventListener("click", function(){
+                    document.getElementById("fourth_question_0").click()
+                    dialogComment.close();
+                  })
+                  dialogComment.querySelector(".ok_btn").addEventListener("click", function(){
+                    fourComment.value = null
+                    ulFourComment.style.display = 'none'
+                    document.getElementById("fourth_question_1").click()
+                    dialogComment.close();
+                  })
+                } else {
+                  ulFourComment.style.display = 'none'
+                  fourComment.required = false
+                }
+              }
+            });
+            $("#fourth_question").trigger("change")
+            $('#fourth_comment_question').on("keyup", function() {
+              if ($('#fourth_comment_question').val() == 0) {
+                $("#fourth_comment_question").val(undefined)
+              }
+            });
+            $("#rating").change(function() {
+              const mainComment = document.getElementById("comment")
+              if ($(this).val() > 2 || $(this).val() < -1 || $(this).val() == 0) {
+                $(this).val(0)
+              }
+              if ($(this).val() == 0) {
+                mainComment.required = false
+                $('label[for="comment"] :last-child').remove()
+              } else {
+                console.log($('label[for="comment"]'))
+                mainComment.required = true
+                if ($('label[for="comment"]')[0].childElementCount < 1) {
+                  $('label[for="comment"]').append("<span class='required text-danger'>*</span>")
+                }
+              }
+            });
+            $("#rating").trigger("change")
+            function ValidateForm(form) {
+              // get all the inputs within the submitted form
+              let inputs = form.getElementsByTagName('input');
+              for (var i = 0; i < inputs.length; i++) {
+                // only validate the inputs that have the required attribute
+                if(inputs[i].hasAttribute("required")){
+                  if(inputs[i].checked == true) {
+                    const dialogBack = document.querySelector("#dialog2")
+                    $(".ok_btn").html("Да");
+                    $(".close-btn").html("Нет");
+                    $("#title2").html("Выйти?")
+                    dialogBack.showModal()
+                    dialogBack.querySelector(".close-btn").addEventListener("click", function(){
+                      dialogBack.close();
+                    })
+                    dialogBack.querySelector(".ok_btn").addEventListener("click", function(){
+                      $("#backButton").attr("href", hrefLink)
+                      window.location = hrefLink
+                      dialogBack.close();
+                    })
+                    return
+                  }
+                }
+              }
+              $("#backButton").attr("href", hrefLink)
+              window.location = hrefLink
+            }
+            $("#backButton").click(function() {
+              ValidateForm(document);
+            });
+          })
+        </script>
+    </div>
+  </div>
+</div>
+{% endblock %}

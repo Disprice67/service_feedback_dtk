@@ -1,0 +1,23 @@
+.btn-click {
+    border-radius: 20px;
+    margin: 8px;
+    padding: 10px 10px;
+    margin-left: 0;
+    display: inline-block;
+}
+
+.title-head {
+    display: inline-block;
+    line-height: 1.4em;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+main .container {
+    padding: 30px 40px;
+}
+
+ul {
+    padding: 0 0;
+    margin-top: -5px;
+}
